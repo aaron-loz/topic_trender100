@@ -5,13 +5,18 @@
 **@Purpose: To create a basic Topic class with Ordering overloading, initializations of the priority queue,
 **and to create a basic version of the processTopic. With examples and mostly using boilerplate functions.
 **@TODO: create a type that will allow 64 bit unsigned positive numbers(if possible in Scala)
-**modify initializePriQu() to accomodate initialize 2+ Topics
-**normalize all variables to be closer to documentation constraints
-**add basic trendingTopics() and all that entails
+**@TODO: modify initializePriQu() to accomodate initialize 2+ Topics
+**@TODO: modify processTopic to handle a full queue
+**@TODO: normalize all variables to be closer to documentation constraints
 */
 import collection.mutable.PriorityQueue
 object TopicTrenderInit{
-
+	
+  val MAXTOPICLENGTH: Byte = 20//small for the sake of testing
+  val NUMTOTALTOPICS: Byte = 10 
+  val NUMTRENDINGTOPICS: Byte = 5
+  val cacheReplacementStrategy = "LRU"//example name of a policy
+  
   case class Topic(topic: String, usageFrequency: Long = 1)//!UF only creates a signed 64 bit, we need unsigned
 
   /*@pre: a Topic Class with the usageFrequency field
@@ -38,19 +43,28 @@ object TopicTrenderInit{
   /*@pre: a unique Topic object, and an existing PriorityQueue
   **@post: Topic object added into PriorityQueue in order
   */
-  def processTopic(a: Topic, pri : PriorityQueue[Topic]) : PriorityQueue[Topic]={
-    return (pri +=(a: Topic))
+  def processTopic(a: Topic, topicPriorityQueue : PriorityQueue[Topic]) : PriorityQueue[Topic]={
+    return (topicPriorityQueue +=(a: Topic))
   }
 
+  /*@pre: passes priorityQueue
+  **@post: prints list of Topics with hashtags and frequency, in sorted order.
+  */
+  def trendingTopics(topicPriorityQueue : PriorityQueue[Topic]) : Unit={	
+    for(e<-topicPriorityQueue.clone.dequeueAll){
+      println(s"${e.topic} ${e.usageFrequency}")
+    }
+	}
   /*Unit testing
   */
   def main(ars: Array[String]): Unit={
-    val twitList = initPriQu(Topic("apples", 200), Topic("Fruit", 100), Topic("Axes", 100))
+    var topicPriorityQueue = initPriQu(Topic("apples", 200), Topic("Fruit", 100), Topic("Axes", 100))
 
-    println(twitList.clone.dequeueAll)//guarantees order, just printing doesn't
+    println(topicPriorityQueue.clone.dequeueAll)//guarantees order, just printing doesn't
 
-    processTopic(Topic("create_dogs", 120), twitList)
-
-    println(twitList.clone.dequeueAll)
+    processTopic(Topic("create_dogs", 120), topicPriorityQueue)
+    
+    println(topicPriorityQueue.clone.dequeueAll)
+    trendingTopics(topicPriorityQueue)
   }
  }
