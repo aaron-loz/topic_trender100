@@ -4,10 +4,11 @@
 **@ver: 0.0.001
 **@Purpose: To create a basic Topic class with Ordering overloading, initializations of the priority queue,
 **and to create a basic version of the processTopic. With examples and mostly using boilerplate functions.
-**@TODO: create a type that will allow 64 bit unsigned positive numbers(if possible in Scala)
-**@TODO: modify initializePriQu() to accomodate initialize 2+ Topics
-**@TODO: modify processTopic to handle a full queue
-**@TODO: normalize all variables to be closer to documentation constraints
+**@TODO: link passera's UInt to this file for Topic Class
+**@TODO: modify initializePriQu() to accomodate 2+ Topics
+**@TODO: (!)modify processTopic to remove last element in priorityqueue when full.
+**@TODO: (!!)create flatten function for Topic Class to allow no side effects in trendingTopic
+**@TODO: Implement Time.scala to measure time.
 */
 import collection.mutable.PriorityQueue
 object TopicTrenderInit{
@@ -44,7 +45,12 @@ object TopicTrenderInit{
   **@post: Topic object added into PriorityQueue in order
   */
   def processTopic(a: Topic, topicPriorityQueue : PriorityQueue[Topic]) : PriorityQueue[Topic]={
-    return (topicPriorityQueue +=(a: Topic))
+    if (topicPriorityQueue.length <= NUMTOTALTOPICS){
+			return (topicPriorityQueue +=(a: Topic))
+    }else{
+    	return (topicPriorityQueue +=(a: Topic))  
+    }
+    
   }
 
   /*@pre: passes priorityQueue
@@ -52,13 +58,17 @@ object TopicTrenderInit{
   */
   def trendingTopics(topicPriorityQueue : PriorityQueue[Topic]) : Unit={	
     for(e<-topicPriorityQueue.clone.dequeueAll){
-      println(s"${e.topic} ${e.usageFrequency}")
+      println(s"${e.topic} ${e.usageFrequency}") //? return "{e.topic} {e.usageFrequency}\n" ?
     }
 	}
+  
+  //!def rewrtrendingTopics(topicPriorityQueue: PriorityQueue[Topic]) = topicPriorityQueue.PriorityQueue.clone.dequeueall.mkString(//?.....flatten.mkString ?
+    //"", "\n", "\n")
+  
   /*Unit testing
   */
   def main(ars: Array[String]): Unit={
-    var topicPriorityQueue = initPriQu(Topic("apples", 200), Topic("Fruit", 100), Topic("Axes", 100))
+    val topicPriorityQueue = initPriQu(Topic("apples", 200), Topic("Fruit", 100), Topic("Axes", 100))
 
     println(topicPriorityQueue.clone.dequeueAll)//guarantees order, just printing doesn't
 
@@ -66,5 +76,7 @@ object TopicTrenderInit{
     
     println(topicPriorityQueue.clone.dequeueAll)
     trendingTopics(topicPriorityQueue)
+    
+    //!println(rewrtrendingTopics(topicPriorityQueue))
   }
  }
