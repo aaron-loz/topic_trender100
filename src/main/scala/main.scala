@@ -4,12 +4,15 @@
 **@ver: 0.0.001
 **@Purpose: To create a basic Topic class with Ordering overloading, initializations of the priority queue,
 **and to create a basic version of the processTopic. With examples and mostly using boilerplate functions.
+**@TODO: separate main object from TopicTrenderInit into separate files(main.scala & tptrndr_100.scala)
 **@TODO: create unsigned Int. Passera's is deprecated.
 **@TODO: modify initializePriQu() to accomodate 2+ Topics
 **@TODO: Create own priorityqueue to sort Topics by Highest to lowest usageFrequency and point to
-**last element in queue for removal. (like a Priority Double-Ended Queue)
+***last element in queue for removal. (like a Priority Double-Ended Queue)
 */
+package topic_trender_100
 import collection.mutable.PriorityQueue
+import time._
 object TopicTrenderInit{
 	
   val MAXTOPICLENGTH: Byte = 20//small for the sake of testing
@@ -18,15 +21,6 @@ object TopicTrenderInit{
   val cacheReplacementStrategy = "LRU"//example name of a policy
   
   case class Topic(topic: String, usageFrequency: Long = 1)//!UF only creates a signed 64 bit, we need unsigned
-  /*@post: measures time of object by nanoseconds.
-   */
-  def time[R](block: => R): R = {
-    val t0 = System.nanoTime()
-    val result = block    // call-by-name
-    val t1 = System.nanoTime()
-    println("Elapsed time: " + (t1 - t0) + "ns")
-    result
-  }
 
   /*@pre: a Topic Class with the usageFrequency field
   **@post: overloads Ordering to accomodate ascending Topic UsageFrequency field
