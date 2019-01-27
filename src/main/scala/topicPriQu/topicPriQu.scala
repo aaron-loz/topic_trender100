@@ -4,24 +4,22 @@
 **@ver: 0.0.001
 **@Purpose: To create a basic Topic class with Ordering overloading, initializations of the priority queue,
 **and to create a basic version of the processTopic. With examples and mostly using boilerplate functions.
-**@TODO: separate main object from TopicTrenderInit into separate files(main.scala & tptrndr_100.scala)
-**@TODO: create unsigned Int. Passera's is deprecated.
 **@TODO: modify initializePriQu() to accomodate 2+ Topics
+**@TODO: modify trendingTopics() with optional var for dequeueing first how many topics.
 **@TODO: Create own priorityqueue to sort Topics by Highest to lowest usageFrequency and point to
 ***last element in queue for removal. (like a Priority Double-Ended Queue)
 */
-package topic_trender_100
+package topicPriQu
 import collection.mutable.PriorityQueue
-import time._
-object TopicTrenderInit{
+import topic._
+
+class TopicTrenderInit{
 	
   val MAXTOPICLENGTH: Byte = 20//small for the sake of testing
   val NUMTOTALTOPICS: Byte = 3
   val NUMTRENDINGTOPICS: Byte = 5
   val cacheReplacementStrategy = "LRU"//example name of a policy
   
-  case class Topic(topic: String, usageFrequency: Long = 1)//!UF only creates a signed 64 bit, we need unsigned
-
   /*@pre: a Topic Class with the usageFrequency field
   **@post: overloads Ordering to accomodate ascending Topic UsageFrequency field
   */
@@ -35,6 +33,7 @@ object TopicTrenderInit{
   def initPriQu(a: Topic): PriorityQueue[Topic] = {
     return PriorityQueue(a)(FreqOrdering)
   }
+  
   /*@pre: 2+ Topic objects passed for initialization
    *@post: returns priority queue containing objects with overloading of Ordering
    */
@@ -46,9 +45,9 @@ object TopicTrenderInit{
    *@post: returns a priorityqueue with all those elements with overloading of Ordering
    */
   def initPriQu(a: Topic, b: IndexedSeq[Topic]): PriorityQueue[Topic] = {
-    b foreach println
     return PriorityQueue(a)(FreqOrdering)//,b.iterator)(FreqOrdering)
   }
+  
   /*@pre: a unique Topic object, and an existing PriorityQueue
    *@post: Topic object added into PriorityQueue in order
    */
@@ -69,18 +68,4 @@ object TopicTrenderInit{
       println(s"${e.topic} ${e.usageFrequency}") //? return "{e.topic} {e.usageFrequency}\n" ?
     }
 	}
-  
-  /*Unit testing
-   */
-  def main(ars: Array[String]): Unit={
-    val topicPriorityQueue = initPriQu(Topic("apples", 200), Topic("Fruit", 100), Topic("Axes", 100))
-
-    println(topicPriorityQueue.clone.dequeueAll)//guarantees order, just printing doesn't
-
-    processTopic(Topic("create_dogs", 120), topicPriorityQueue)
-    
-    println(topicPriorityQueue.clone.dequeueAll)
-    trendingTopics(topicPriorityQueue)
-    
-  }
  }
